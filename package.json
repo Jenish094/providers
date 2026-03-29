@@ -1,5 +1,5 @@
 {
-  "name": "@p-stream/providers",
+  "name": "@jenish094/providers",
   "version": "3.2.0",
   "description": "Package that contains all the providers of p-stream",
   "type": "module",
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/p-stream/providers.git"
+    "url": "git+https://github.com/jenish094/providers.git"
   },
   "keywords": [
     "p-stream",
@@ -31,9 +31,9 @@
   "author": "p-stream",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/p-stream/providers/issues"
+    "url": "https://github.com/jenish094/providers/issues"
   },
-  "homepage": "https://p-stream.github.io/providers/",
+  "homepage": "https://jenish094.github.io/providers/",
   "scripts": {
     "build": "vite build",
     "cli": "vite-node ./src/dev-cli/index.ts",
