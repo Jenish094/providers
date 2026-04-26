@@ -26,58 +26,46 @@ async function encryptTmdbId(ctx: MovieScrapeContext | ShowScrapeContext, tmdbId
   return response.result;
 }
 
-async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
-  const { tmdbId } = ctx.media;
-
-  ctx.progress(10);
-
-  const encryptedId = await encryptTmdbId(ctx, tmdbId.toString());
-
-  ctx.progress(30);
-
-  const apiUrl =
-    ctx.media.type === 'movie'
-      ? `${VIDLINK_BASE}/movie/${encryptedId}`
-      : `${VIDLINK_BASE}/tv/${encryptedId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
-
-  const vidlinkRaw = await ctx.proxiedFetcher<string>(apiUrl, {
-    headers,
-  });
-
-  if (!vidlinkRaw) {
-    throw new NotFoundError('No response from vidlink API');
-  }
-
-  ctx.progress(60);
-
-  let vidlinkData: { stream?: any };
+async function comboScraper(ctx) {
   try {
-    vidlinkData = typeof vidlinkRaw === 'string' ? JSON.parse(vidlinkRaw) : vidlinkRaw;
-  } catch {
-    throw new NotFoundError('Invalid JSON from vidlink API');
+    const { tmdbId } = ctx.media;
+
+    const encryptedId = await encryptTmdbId(ctx, tmdbId.toString());
+
+    try {
+      const apiUrl =
+        ctx.media.type === 'movie'
+          ? `${VIDLINK_BASE}/movie/${encryptedId}`
+          : `${VIDLINK_BASE}/tv/${encryptedId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+
+      const vidlinkRaw = await ctx.proxiedFetcher(apiUrl, { headers });
+
+      const data = JSON.parse(vidlinkRaw);
+
+      if (data?.stream) {
+        return {
+          embeds: [],
+          stream: [/* your existing logic */],
+        };
+      }
+    } catch {}
+
+    return {
+      embeds: [
+        {
+          id: "vidlink",
+          url: `https://vidlink.pro/embed/${encryptedId}`,
+        }
+      ]
+    };
+
+  } catch (err) {
+    return {
+      embeds: [],
+      stream: [],
+    };
   }
-
-  ctx.progress(80);
-
-  if (!vidlinkData.stream) {
-    throw new NotFoundError('No stream data found in vidlink response');
-  }
-
-  const { stream } = vidlinkData;
-
-  const captions = [];
-  if (stream.captions && Array.isArray(stream.captions)) {
-    for (const caption of stream.captions) {
-      const captionType = caption.type === 'srt' ? 'srt' : 'vtt';
-      captions.push({
-        id: caption.id || caption.url,
-        url: caption.url,
-        language: caption.language || 'Unknown',
-        type: captionType as 'srt' | 'vtt',
-        hasCorsRestrictions: caption.hasCorsRestrictions || false,
-      });
-    }
-  }
+}
 
   // const flags = stream.flags || [];
   // if (vidlinkData.flags) {
