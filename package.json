@@ -7,17 +7,17 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "./lib"
+    "./dist"
   ],
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.umd.cjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.umd.cjs"
       }
     }
   },
