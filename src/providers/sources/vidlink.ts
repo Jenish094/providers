@@ -26,46 +26,58 @@ async function encryptTmdbId(ctx: MovieScrapeContext | ShowScrapeContext, tmdbId
   return response.result;
 }
 
-async function comboScraper(ctx) {
-  try {
-    const { tmdbId } = ctx.media;
+async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
+  const { tmdbId } = ctx.media;
 
-    const encryptedId = await encryptTmdbId(ctx, tmdbId.toString());
+  ctx.progress(10);
 
-    try {
-      const apiUrl =
-        ctx.media.type === 'movie'
-          ? `${VIDLINK_BASE}/movie/${encryptedId}`
-          : `${VIDLINK_BASE}/tv/${encryptedId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+  const encryptedId = await encryptTmdbId(ctx, tmdbId.toString());
 
-      const vidlinkRaw = await ctx.proxiedFetcher(apiUrl, { headers });
+  ctx.progress(30);
 
-      const data = JSON.parse(vidlinkRaw);
+  const apiUrl =
+    ctx.media.type === 'movie'
+      ? `${VIDLINK_BASE}/movie/${encryptedId}`
+      : `${VIDLINK_BASE}/tv/${encryptedId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
 
-      if (data?.stream) {
-        return {
-          embeds: [],
-          stream: [/* your existing logic */],
-        };
-      }
-    } catch {}
+  const vidlinkRaw = await ctx.proxiedFetcher<string>(apiUrl, {
+    headers,
+  });
 
-    return {
-      embeds: [
-        {
-          id: "vidlink",
-          url: `https://vidlink.pro/embed/${encryptedId}`,
-        }
-      ]
-    };
-
-  } catch (err) {
-    return {
-      embeds: [],
-      stream: [],
-    };
+  if (!vidlinkRaw) {
+    throw new NotFoundError('No response from vidlink API');
   }
-}
+
+  ctx.progress(60);
+
+  let vidlinkData: { stream?: any };
+  try {
+    vidlinkData = typeof vidlinkRaw === 'string' ? JSON.parse(vidlinkRaw) : vidlinkRaw;
+  } catch {
+    throw new NotFoundError('Invalid JSON from vidlink API');
+  }
+
+  ctx.progress(80);
+
+  if (!vidlinkData.stream) {
+    throw new NotFoundError('No stream data found in vidlink response');
+  }
+
+  const { stream } = vidlinkData;
+
+  const captions = [];
+  if (stream.captions && Array.isArray(stream.captions)) {
+    for (const caption of stream.captions) {
+      const captionType = caption.type === 'srt' ? 'srt' : 'vtt';
+      captions.push({
+        id: caption.id || caption.url,
+        url: caption.url,
+        language: caption.language || 'Unknown',
+        type: captionType as 'srt' | 'vtt',
+        hasCorsRestrictions: caption.hasCorsRestrictions || false,
+      });
+    }
+  }
 
   // const flags = stream.flags || [];
   // if (vidlinkData.flags) {
@@ -78,8 +90,13 @@ async function comboScraper(ctx) {
     embeds: [],
     stream: [
       {
-      id: "vidlink",
-      url: `https://vidlink.pro/embed/${encryptedId}`,
+        id: stream.id || 'primary',
+        type: stream.type || 'file',
+        qualities: stream.qualities || {},
+        playlist: stream.playlist,
+        captions,
+        flags: [],
+        headers: stream.headers || headers,
       },
     ],
   };
@@ -87,7 +104,7 @@ async function comboScraper(ctx) {
 
 export const vidlinkScraper = makeSourcerer({
   id: 'vidlink',
-  name: 'VidLink',
+  name: 'VidLink 🔥',
   rank: 310,
   disabled: false,
   flags: [],
