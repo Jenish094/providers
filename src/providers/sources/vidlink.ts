@@ -90,13 +90,8 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
     embeds: [],
     stream: [
       {
-        id: stream.id || 'primary',
-        type: stream.type || 'file',
-        qualities: stream.qualities || {},
-        playlist: stream.playlist,
-        captions,
-        flags: [],
-        headers: stream.headers || headers,
+      id: "vidlink",
+      url: `https://vidlink.pro/embed/${encryptedId}`,
       },
     ],
   };
