@@ -87,7 +87,7 @@ async function comboScraper(ctx) {
 
 export const vidlinkScraper = makeSourcerer({
   id: 'vidlink',
-  name: 'VidLink 🔥',
+  name: 'VidLink',
   rank: 310,
   disabled: false,
   flags: [],
