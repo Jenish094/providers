@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/jenish094/providers/issues"
   },
-  "homepage": "https://jenish094.github.io/providers/",
+  "homepage": "https://providers.pstream.jenish.tech",
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "cli": "vite-node ./src/dev-cli/index.ts",
