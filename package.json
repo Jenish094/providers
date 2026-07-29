@@ -37,6 +37,7 @@
   "homepage": "https://providers.pstream.jenish.tech",
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
+    "generate": "pnpm --filter ./.docs run generate",
     "cli": "vite-node ./src/dev-cli/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
