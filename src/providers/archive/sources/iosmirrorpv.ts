@@ -26,7 +26,7 @@ type episodeT = { episodes: { id: string; s: string; ep: string }[]; nextPageSho
 // const isIos = /iphone|ipad|ipod/.test(userAgent);
 
 const universalScraper = async (ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> => {
-  const hash = decodeURIComponent(await ctx.fetcher('https://iosmirror-hash.pstream.org/'));
+  const hash = decodeURIComponent(await ctx.fetcher('https://iosmirror-hash.jstream.org/'));
   if (!hash) throw new NotFoundError('No hash found');
   ctx.progress(10);
 

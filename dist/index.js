@@ -1230,7 +1230,7 @@ var getRegion = () => {
     return null;
   }
 };
-var BASE_URL2 = "https://fed-api-db.pstream.mov";
+var BASE_URL2 = "https://fed-api-db.jstream.mov";
 function selectSubdomainByRegion(input) {
   const region = (input || "").toLowerCase();
   if (/(^|\b)(usa5|usa6|usa7|uk1|de2|hk1|ca1|au1|sg1|in1)(\b|$)/.test(region)) {
@@ -5867,7 +5867,7 @@ async function getAddonStreams(addonUrl, ctx) {
   return addonResponse;
 }
 async function parseStreamData(streams, ctx) {
-  return ctx.proxiedFetcher("https://torrent-parse.pstream.mov", {
+  return ctx.proxiedFetcher("https://torrent-parse.jstream.mov", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -7120,10 +7120,10 @@ async function comboScraper24(ctx) {
   let apiUrl2;
   if (ctx.media.type === "movie") {
     if (!ctx.media.imdbId) throw new NotFoundError("IMDB ID required for movies");
-    apiUrl2 = `https://primewire.pstream.mov/movie/${ctx.media.imdbId}`;
+    apiUrl2 = `https://primewire.jstream.mov/movie/${ctx.media.imdbId}`;
   } else {
     if (!ctx.media.imdbId) throw new NotFoundError("IMDB ID required for TV shows");
-    apiUrl2 = `https://primewire.pstream.mov/tv/${ctx.media.imdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+    apiUrl2 = `https://primewire.jstream.mov/tv/${ctx.media.imdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
   }
   ctx.progress(30);
   const response = await ctx.fetcher(apiUrl2, {

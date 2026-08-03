@@ -38,7 +38,7 @@ export async function parseStreamData(
   streams: StreamInput[],
   ctx: MovieScrapeContext | ShowScrapeContext,
 ): Promise<DebridParsedStream[]> {
-  return ctx.proxiedFetcher('https://torrent-parse.pstream.mov', {
+  return ctx.proxiedFetcher('https://torrent-parse.jstream.mov', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

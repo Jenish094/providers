@@ -32,7 +32,7 @@ const getRegion = (): string | null => {
   }
 };
 
-const BASE_URL = 'https://fed-api-db.pstream.mov';
+const BASE_URL = 'https://fed-api-db.jstream.mov';
 
 function selectSubdomainByRegion(input: string | null): string | null {
   const region = (input || '').toLowerCase();

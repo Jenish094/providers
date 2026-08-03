@@ -4,7 +4,7 @@
 
 This published version is equivalent to the master branch.
 
-Support is not provided for any forks or mirrors of P-Stream.
+Support is not provided for any forks or mirrors of J-Stream.
 
 ## Reporting a Vulnerability
 

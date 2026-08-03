@@ -17,7 +17,7 @@
 //       video_urls: string[];
 //       subtitles: Array<{ label: string; file: string }>;
 //     }>;
-//   }>('https://psvl.api.pstream.org/api/video-url', {
+//   }>('https://psvl.api.jstream.org/api/video-url', {
 //     query: { embedUrl },
 //   });
 
