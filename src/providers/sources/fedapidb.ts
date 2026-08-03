@@ -32,7 +32,7 @@ const getRegion = (): string | null => {
   }
 };
 
-const BASE_URL = 'https://fed-api-db.jstream.mov';
+const BASE_URL = 'https://fed.jenish.tech';
 
 function selectSubdomainByRegion(input: string | null): string | null {
   const region = (input || '').toLowerCase();
@@ -94,7 +94,7 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   // Get Turnstile token for verification
   let turnstileToken: string;
   try {
-    turnstileToken = await getTurnstileToken('0x4AAAAAABgPwhrOT6x6sTjI');
+    turnstileToken = await getTurnstileToken('0x4AAAAAAC0mMjKwHsZ13Ge3');
   } catch (error) {
     // eslint-disable-next-line no-alert
     alert('FED DB Turnstile verification failed. Please refresh the page and try again.');

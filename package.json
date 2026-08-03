@@ -1,23 +1,23 @@
 {
   "name": "@jenish094/providers",
-  "version": "3.2.0",
-  "description": "Package that contains all the providers of j-stream",
+  "version": "3.2.1",
+  "description": "Package that contains all the providers of p-stream",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "./lib"
+    "./dist"
   ],
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.umd.cjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.umd.cjs"
       }
     }
   },
@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/jenish094/providers/issues"
   },
-  "homepage": "https://jenish094.github.io/providers/",
+  "homepage": "https://providers.pstream.jenish.tech",
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "cli": "vite-node ./src/dev-cli/index.ts",
@@ -51,16 +51,16 @@
     "prepublishOnly": "pnpm test && pnpm run lint"
   },
   "devDependencies": {
-    "./nabla/vite-plugin-eslint": "^2.0.6",
-    "./types/cookie": "^0.6.0",
-    "./types/crypto-js": "^4.2.2",
-    "./types/node-fetch": "^2.6.13",
-    "./types/randombytes": "^2.0.3",
-    "./types/set-cookie-parser": "^2.4.10",
-    "./types/spinnies": "^0.5.3",
-    "./typescript-eslint/eslint-plugin": "^7.18.0",
-    "./typescript-eslint/parser": "^7.18.0",
-    "./vitest/coverage-v8": "^1.6.1",
+    "@nabla/vite-plugin-eslint": "^2.0.6",
+    "@types/cookie": "^0.6.0",
+    "@types/crypto-js": "^4.2.2",
+    "@types/node-fetch": "^2.6.13",
+    "@types/randombytes": "^2.0.3",
+    "@types/set-cookie-parser": "^2.4.10",
+    "@types/spinnies": "^0.5.3",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vitest/coverage-v8": "^1.6.1",
     "commander": "^12.1.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.6.1",

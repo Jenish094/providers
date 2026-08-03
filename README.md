@@ -1,4 +1,4 @@
-# @j-stream/providers
+# @jenish094/providers
 
 package that holds all providers of J-Stream.
 Feel free to use for your own projects.
@@ -8,7 +8,7 @@ features:
 - scrape popular streaming websites
 - works in both browser and server-side
 
-Visit documentation here: https://j-stream.github.io/providers/
+Visit documentation here: https://providers.pstream.jenish.tech
 
 ## How to run locally or test my changes
 

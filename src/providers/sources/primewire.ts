@@ -21,11 +21,11 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   if (ctx.media.type === 'movie') {
     // For movies, we need IMDB ID
     if (!ctx.media.imdbId) throw new NotFoundError('IMDB ID required for movies');
-    apiUrl = `https://primewire.jstream.mov/movie/${ctx.media.imdbId}`;
+    apiUrl = `https://primewire.pw/movie/${ctx.media.imdbId}`;
   } else {
     // For TV shows, we need IMDB ID, season, and episode
     if (!ctx.media.imdbId) throw new NotFoundError('IMDB ID required for TV shows');
-    apiUrl = `https://primewire.jstream.mov/tv/${ctx.media.imdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+    apiUrl = `https://primewire.pw/tv/${ctx.media.imdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
   }
 
   ctx.progress(30);
