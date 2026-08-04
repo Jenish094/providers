@@ -71,8 +71,8 @@ async function processScrape(
 
   let streamUrl =
     mediaType === 'show'
-      ? `${BASE_URL}/show/${matchedMedia.id}?season=${(ctx as ShowScrapeContext).media.season.number}&episode=${(ctx as ShowScrapeContext).media.episode.number}`
-      : `${BASE_URL}/movie/${matchedMedia.id}`;
+      ? `${BASE_URL}/api/show/${matchedMedia.id}?season=${(ctx as ShowScrapeContext).media.season.number}&episode=${(ctx as ShowScrapeContext).media.episode.number}`
+      : `${BASE_URL}/api/movie/${matchedMedia.id}`;
 
   streamUrl += `&ui=${encodeURIComponent(userToken)}&turnstile=${encodeURIComponent(turnstileToken)}`;
 

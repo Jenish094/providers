@@ -106,8 +106,8 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   // Build the API URL based on the provider configuration and media type
   const apiUrl =
     ctx.media.type === 'movie'
-      ? `${BASE_URL}/movie/${ctx.media.tmdbId}`
-      : `${BASE_URL}/tv/${ctx.media.tmdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+      ? `${BASE_URL}/api/movie/${ctx.media.tmdbId}`
+      : `${BASE_URL}/api/tv/${ctx.media.tmdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
 
   // Fetch data from the API
   const data = await ctx.fetcher<StreamData>(apiUrl);
