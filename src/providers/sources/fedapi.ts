@@ -34,7 +34,10 @@ interface StreamData {
   size?: string;
 }
 
-async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
+async function processScrape(
+  ctx: ShowScrapeContext | MovieScrapeContext,
+  mediaType: 'movie' | 'show'
+): Promise<SourcererOutput> {
   const userToken = getUserToken();
   if (!userToken) throw new NotFoundError('Requires a user token!');
 
@@ -48,17 +51,31 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
     throw new NotFoundError(`Turnstile verification failed: ${error}`);
   }
 
+  ctx.progress(20);
+
+  const searchType = mediaType === 'show' ? 'tv' : 'movie';
+  const searchUrl = `${BASE_URL}/search/${searchType}?title=${encodeURIComponent(ctx.media.title)}&turnstile=${encodeURIComponent(turnstileToken)}`;
+
+  const searchRes = await fetch(searchUrl, { credentials: 'omit' });
+  if (!searchRes.ok) throw new NotFoundError('Search request failed');
+  const searchResult = await searchRes.json();
+
+  const matchedMedia = searchResult?.results?.find((item: any) => {
+    const itemYear = item.year || item.release_date?.split('-')[0];
+    return parseInt(itemYear, 10) === ctx.media.releaseYear;
+  });
+
+  if (!matchedMedia?.id) throw new NotFoundError('Media entry not found in repo registry');
+
   ctx.progress(50);
 
-  // Build the API URL based on the provider configuration and media type
-  const name = ctx.media.title;
-  let apiUrl = `${BASE_URL}/fedapi?name=${encodeURIComponent(name)}&year=${ctx.media.releaseYear}&ui=${encodeURIComponent(userToken)}`;
-  if (ctx.media.type === 'show') {
-    apiUrl += `&season=${ctx.media.season.number}&episode=${ctx.media.episode.number}`;
-  }
+  let streamUrl = mediaType === 'show'
+    ? `${BASE_URL}/show/${matchedMedia.id}?season=${(ctx as ShowScrapeContext).media.season.number}&episode=${(ctx as ShowScrapeContext).media.episode.number}`
+    : `${BASE_URL}/movie/${matchedMedia.id}`;
 
-  // Fetch data from the API
-  const res = await fetch(apiUrl, { credentials: 'omit' });
+  streamUrl += `&ui=${encodeURIComponent(userToken)}&turnstile=${encodeURIComponent(turnstileToken)}`;
+
+  const res = await fetch(streamUrl, { credentials: 'omit' });
   if (!res.ok) throw new NotFoundError('API request failed');
   const data: StreamData = await res.json();
 
@@ -67,7 +84,7 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   }
   if (!data) throw new NotFoundError('No response from API');
 
-  ctx.progress(90);
+  ctx.progress(70);
 
   // Process streams data
   type StreamInfo = { url: string; type: 'hls' | 'mp4' };
@@ -157,11 +174,19 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   };
 }
 
+async function scrapeMovie(ctx: MovieScrapeContext): Promise<SourcererOutput> {
+  return processScrape(ctx, 'movie');
+}
+
+async function scrapeShow(ctx: ShowScrapeContext): Promise<SourcererOutput> {
+  return processScrape(ctx, 'show');
+}
+
 export const FedAPIScraper = makeSourcerer({
   id: 'fedapi',
   name: 'FED API (4K) 🔥',
   rank: 300,
   flags: [flags.CORS_ALLOWED],
-  scrapeMovie: comboScraper,
-  scrapeShow: comboScraper,
+  scrapeMovie,
+  scrapeShow,
 });
