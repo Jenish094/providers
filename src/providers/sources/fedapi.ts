@@ -36,7 +36,7 @@ interface StreamData {
 
 async function processScrape(
   ctx: ShowScrapeContext | MovieScrapeContext,
-  mediaType: 'movie' | 'show'
+  mediaType: 'movie' | 'show',
 ): Promise<SourcererOutput> {
   const userToken = getUserToken();
   if (!userToken) throw new NotFoundError('Requires a user token!');
@@ -69,9 +69,10 @@ async function processScrape(
 
   ctx.progress(50);
 
-  let streamUrl = mediaType === 'show'
-    ? `${BASE_URL}/show/${matchedMedia.id}?season=${(ctx as ShowScrapeContext).media.season.number}&episode=${(ctx as ShowScrapeContext).media.episode.number}`
-    : `${BASE_URL}/movie/${matchedMedia.id}`;
+  let streamUrl =
+    mediaType === 'show'
+      ? `${BASE_URL}/show/${matchedMedia.id}?season=${(ctx as ShowScrapeContext).media.season.number}&episode=${(ctx as ShowScrapeContext).media.episode.number}`
+      : `${BASE_URL}/movie/${matchedMedia.id}`;
 
   streamUrl += `&ui=${encodeURIComponent(userToken)}&turnstile=${encodeURIComponent(turnstileToken)}`;
 
