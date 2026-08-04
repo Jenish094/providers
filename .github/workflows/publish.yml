@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - production
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -11,7 +12,8 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup pnpm 📦️
+        uses: pnpm/action-setup@v4
 
       - name: Use Node LTS ✨
         uses: actions/setup-node@v4
@@ -26,6 +28,7 @@ jobs:
       - name: Build 🔨
         run: pnpm build
 
-      - uses: simenandre/publish-with-pnpm@v2
-        with:
-          npm-auth-token: ${{ secrets.NPM_TOKEN }}
+      - name: Publish Package Natively
+        run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
