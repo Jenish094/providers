@@ -1,8 +1,4 @@
 import { Embed, Sourcerer } from '@/providers/base';
-import { AnimekaiScraper } from './embeds/animekai';
-import { animekaiScraper } from './sources/animekai';
-import { FedAPIScraper } from './sources/fedapi';
-import { FedAPIDBScraper } from './sources/fedapidb';
 import { doodScraper } from '@/providers/embeds/dood';
 import { filemoonScraper } from '@/providers/embeds/filemoon';
 import { mixdropScraper } from '@/providers/embeds/mixdrop';
@@ -21,6 +17,7 @@ import { tugaflixScraper } from '@/providers/sources/tugaflix';
 import { vidsrcvipScraper } from '@/providers/sources/vidsrcvip';
 import { zoechipScraper } from '@/providers/sources/zoechip';
 
+import { AnimekaiScraper } from './embeds/animekai';
 import { AnimetsuEmbeds } from './embeds/animetsu';
 import {
   autoembedBengaliScraper,
@@ -73,12 +70,15 @@ import { warezPlayerScraper } from './embeds/warezcdn/warezplayer';
 import { zunimeEmbeds } from './embeds/zunime';
 import { EightStreamScraper } from './sources/8stream';
 import { animeflvScraper } from './sources/animeflv';
+import { animekaiScraper } from './sources/animekai';
 import { animetsuScraper } from './sources/animetsu';
 import { cinehdplusScraper } from './sources/cinehdplus-es';
 import { coitusScraper } from './sources/coitus';
 import { cuevana3Scraper } from './sources/cuevana3';
 import { debridScraper } from './sources/debrid';
 import { embedsuScraper } from './sources/embedsu';
+import { FedAPIScraper } from './sources/fedapi';
+import { FedAPIDBScraper } from './sources/fedapidb';
 import { fullhdfilmizleScraper } from './sources/fullhdfilmizle';
 import { hdRezkaScraper } from './sources/hdrezka';
 import { lookmovieScraper } from './sources/lookmovie';

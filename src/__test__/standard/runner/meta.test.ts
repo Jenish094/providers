@@ -34,6 +34,7 @@ describe('ProviderControls.getMetadata()', () => {
       name: 'Z',
       rank: mockSources.fullSourceZBoth.rank,
       mediaTypes: ['movie', 'show'],
+      flags: [],
     });
   });
 

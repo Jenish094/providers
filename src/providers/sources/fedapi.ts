@@ -19,10 +19,7 @@ const getUserToken = (): string | null => {
   }
 };
 
-
 const BASE_URL = 'https://fed.jenish.tech';
-
-
 
 interface StreamEntry {
   type: 'hls' | 'mp4';

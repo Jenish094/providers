@@ -66,16 +66,28 @@ export function getTargetFeatures(
   consistentIpForRequests: boolean,
   proxyStreams?: boolean,
 ): FeatureMap {
-  const features = targetToFeatures[target];
+  const baseFeatures = targetToFeatures[target];
+  const features: FeatureMap = {
+    requires: [...baseFeatures.requires],
+    disallowed: [...baseFeatures.disallowed],
+  };
+
   if (!consistentIpForRequests) features.disallowed.push(flags.IP_LOCKED);
   if (proxyStreams) features.disallowed.push(flags.PROXY_BLOCKED);
+
   return features;
 }
 
-export function flagsAllowedInFeatures(features: FeatureMap, inputFlags: Flags[]): boolean {
-  const hasAllFlags = features.requires.every((v) => inputFlags.includes(v));
+export function flagsAllowedInFeatures(features: FeatureMap, inputFlags?: Flags[]): boolean {
+  const currentFlags = inputFlags ?? [];
+  const requires = features?.requires ?? [];
+  const disallowed = features?.disallowed ?? [];
+
+  const hasAllFlags = requires.every((v) => currentFlags.includes(v));
   if (!hasAllFlags) return false;
-  const hasDisallowedFlag = features.disallowed.some((v) => inputFlags.includes(v));
+
+  const hasDisallowedFlag = disallowed.some((v) => currentFlags.includes(v));
   if (hasDisallowedFlag) return false;
+
   return true;
 }
