@@ -3,7 +3,7 @@ import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
 
 const API_BASE = 'https://enc-dec.app/api';
-const VIDLINK_BASE = 'https://vidlink.pro/api/b';
+const VIDLINK_BASE = 'https://vidlink.pro/';
 
 const headers = {
   'User-Agent':
