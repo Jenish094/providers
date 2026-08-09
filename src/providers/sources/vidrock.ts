@@ -156,7 +156,7 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
 
 export const vidrockScraper = makeSourcerer({
   id: 'vidrock',
-  name: 'Granite',
+  name: 'VidRock 🔥',
   rank: 170,
   disabled: false,
   flags: [],
