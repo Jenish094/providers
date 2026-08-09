@@ -102,7 +102,7 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
   if (ctx.media.type === 'movie') {
     const slug = createSlug(ctx.media.title);
     url = `${zoeBase}/movies/${slug}`;
-    // console.log(`Movie URL: ${url}`);  
+    // console.log(`Movie URL: ${url}`);
   } else {
     const slug = createSlug(ctx.media.title);
     url = `${zoeBase}/tvshows/${slug}-season-${ctx.media.season.number}-episode-${ctx.media.episode.number}`;
