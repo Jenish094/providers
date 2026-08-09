@@ -6,7 +6,7 @@ import { SourcererOutput, makeSourcerer } from '@/providers/base';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
 
-const zoeBase = 'https://zoechip.org';
+const zoeBase = 'https://zoechip.click';
 
 function createSlug(title: string): string {
   return title
@@ -101,11 +101,11 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
   // Construct URLs based on media type
   if (ctx.media.type === 'movie') {
     const slug = createSlug(ctx.media.title);
-    url = `${zoeBase}/film/${slug}-${ctx.media.releaseYear}`;
-    // console.log(`Movie URL: ${url}`);
+    url = `${zoeBase}/movies/${slug}`;
+    // console.log(`Movie URL: ${url}`);  
   } else {
     const slug = createSlug(ctx.media.title);
-    url = `${zoeBase}/episode/${slug}-season-${ctx.media.season.number}-episode-${ctx.media.episode.number}`;
+    url = `${zoeBase}/tvshows/${slug}-season-${ctx.media.season.number}-episode-${ctx.media.episode.number}`;
     // console.log(`Show URL: ${url}`);
   }
 
@@ -209,7 +209,7 @@ export const zoechipScraper = makeSourcerer({
   id: 'zoechip',
   name: 'ZoeChip',
   rank: 170,
-  disabled: true,
+  disabled: false, // I dont think it will work
   flags: [],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,

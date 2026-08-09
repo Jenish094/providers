@@ -40,7 +40,7 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
 
   const encoded = encodeURIComponent(encryptedBase64);
 
-  const url = `${baseUrl}/${itemType}/${encoded}`;
+  const url = `${baseUrl}/${itemType}/${itemId}`;
 
   const res = await ctx.proxiedFetcher<any>(url, {
     headers: {

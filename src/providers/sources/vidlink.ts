@@ -31,14 +31,14 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
 
   ctx.progress(10);
 
-  const encryptedId = await encryptTmdbId(ctx, tmdbId.toString());
+  // const encryptedId = await encryptTmdbId(ctx, tmdbId.toString());
 
   ctx.progress(30);
 
   const apiUrl =
     ctx.media.type === 'movie'
-      ? `${VIDLINK_BASE}/movie/${encryptedId}`
-      : `${VIDLINK_BASE}/tv/${encryptedId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+      ? `${VIDLINK_BASE}/movie/${tmdbId}`
+      : `${VIDLINK_BASE}/tv/${tmdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
 
   const vidlinkRaw = await ctx.proxiedFetcher<string>(apiUrl, {
     headers,

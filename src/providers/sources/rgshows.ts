@@ -3,23 +3,23 @@ import { NotFoundError } from '@/utils/errors';
 
 import { SourcererOutput, makeSourcerer } from '../base';
 
-const baseUrl = 'api.rgshows.ru';
+const baseUrl = '1tube.org';
 
 const headers = {
-  referer: 'https://rgshows.ru/',
-  origin: 'https://rgshows.ru',
+  referer: 'https://1tube.org/',
+  origin: 'https://1tube.org',
   host: baseUrl,
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
 };
 
 async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
-  let url = `https://${baseUrl}/main`;
+  let url = `https://${baseUrl}/`;
 
   if (ctx.media.type === 'movie') {
-    url += `/movie/${ctx.media.tmdbId}`;
+    url += `/watch/${ctx.media.tmdbId}`;
   } else if (ctx.media.type === 'show') {
-    url += `/tv/${ctx.media.tmdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
+    url += `/watch/${ctx.media.tmdbId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
   }
 
   const res = await ctx.proxiedFetcher(url, { headers });
@@ -36,8 +36,8 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   const m3u8Headers = {
     ...headers,
     host: streamHost,
-    origin: 'https://www.rgshows.ru',
-    referer: 'https://www.rgshows.ru/',
+    origin: 'https://www.1tube.org',
+    referer: 'https://www.1tube.org/',
   };
 
   ctx.progress(100);
@@ -58,8 +58,8 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
 }
 
 export const rgshowsScraper = makeSourcerer({
-  id: 'rgshows',
-  name: 'RGShows',
+  id: '1tube',
+  name: '1Tube',
   rank: 176,
   flags: [],
   scrapeMovie: comboScraper,
