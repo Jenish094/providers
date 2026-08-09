@@ -3,15 +3,15 @@ import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
 
 async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
-  const baseApiUrl = 'https://primesrc.me/api/v1/';
+  const baseApiUrl = 'https://primesrc.me/embed/';
 
   let serverData;
   try {
     if (ctx.media.type === 'movie') {
-      const url = `${baseApiUrl}s?tmdb=${ctx.media.tmdbId}&type=movie`;
+      const url = `${baseApiUrl}s?tmdb=${ctx.media.tmdbId}`;
       serverData = await fetch(url);
     } else {
-      const url = `${baseApiUrl}s?tmdb=${ctx.media.tmdbId}&season=${ctx.media.season.number}&episode=${ctx.media.episode.number}&type=tv`;
+      const url = `${baseApiUrl}s?tmdb=${ctx.media.tmdbId}&season=${ctx.media.season.number}&episode=${ctx.media.episode.number}`;
       serverData = await fetch(url);
     }
   } catch (error) {
@@ -68,6 +68,7 @@ export const primesrcScraper = makeSourcerer({
   id: 'primesrc',
   name: 'PrimeSrc',
   rank: 168,
+  disabled: false,
   flags: [],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
