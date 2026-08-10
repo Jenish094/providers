@@ -1,6 +1,6 @@
 {
   "name": "@jenish094/providers",
-  "version": "3.2.9",
+  "version": "3.2.10",
   "description": "Package that contains all the providers of p-stream",
   "type": "module",
   "main": "dist/index.js",
