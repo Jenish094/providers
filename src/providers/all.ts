@@ -84,7 +84,7 @@ import { lookmovieScraper } from './sources/lookmovie';
 import { movies4fScraper } from './sources/movies4f';
 import { myanimeScraper } from './sources/myanime';
 import { nunflixScraper } from './sources/nunflix';
-import { peestream } from './sources/peestream';
+import { peestreamProvider } from './sources/peestream';
 import { pelisplushdScraper } from './sources/pelisplushd';
 import { primewireScraper } from './sources/primewire';
 import { rgshowsScraper } from './sources/rgshows';
@@ -108,7 +108,7 @@ export function gatherAllSources(): Array<Sourcerer> {
   return [
     fsOnlineScraper,
     dopeboxScraper,
-    peestreamScraper,
+    peestreamProvider,
     ridooMoviesScraper,
     hdRezkaScraper,
     warezcdnScraper,

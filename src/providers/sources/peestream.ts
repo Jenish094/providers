@@ -1,5 +1,7 @@
 import { flags } from '@/entrypoint/utils/targets';
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
+import { Caption } from '@/providers/captions';
+import { Stream } from '@/providers/streams';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
 
@@ -11,30 +13,33 @@ interface StreamPayload {
   id: string;
   flags?: string[];
   captions?: Array<{
-    id: string;
+    id?: string;
     language: string;
-    hasCors: boolean;
-    type: string;
+    hasCors?: boolean;
+    hasCorsRestrictions?: boolean;
+    type?: string;
     url: string;
   }>;
   headers?: Record<string, string>;
 }
 
-async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
-  const isMovie = ctx.media.type === 'movie';
-
+export async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
   // Construct URL parameters
   const queryParams = new URLSearchParams({
     type: ctx.media.type,
     title: ctx.media.title,
     ...(ctx.media.tmdbId && { tmdbId: ctx.media.tmdbId.toString() }),
     ...(ctx.media.imdbId && { imdbId: ctx.media.imdbId }),
-    ...(isMovie && ctx.media.releaseYear && { releaseYear: ctx.media.releaseYear.toString() }),
-    ...(!isMovie && {
-      season: ctx.media.season.number.toString(),
-      episode: ctx.media.episode.number.toString(),
-    }),
   });
+
+  if (ctx.media.type === 'movie') {
+    if (ctx.media.releaseYear) {
+      queryParams.set('releaseYear', ctx.media.releaseYear.toString());
+    }
+  } else {
+    queryParams.set('season', ctx.media.season.number.toString());
+    queryParams.set('episode', ctx.media.episode.number.toString());
+  }
 
   const requestUrl = `${providerUrl}?${queryParams.toString()}`;
 
@@ -82,27 +87,45 @@ async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Pr
   }
 
   // Parse captions if present
-  const captions = (streamData.captions || []).map((caption) => ({
-    id: caption.id || caption.language,
-    language: caption.language,
-    type: caption.type === 'vtt' ? 'vtt' : 'srt',
-    url: caption.url,
-    hasCors: caption.hasCors ?? true,
-  }));
+  const captions: Caption[] = (streamData.captions || []).map((caption) => {
+    const type = (caption.type ?? 'srt').toLowerCase();
+    return {
+      id: caption.id || caption.language,
+      language: caption.language,
+      type: type === 'vtt' ? 'vtt' : 'srt',
+      url: caption.url,
+      hasCorsRestrictions: caption.hasCorsRestrictions ?? caption.hasCors ?? true,
+    };
+  });
 
-  // Return direct stream output instead of embeds
+  const stream: Stream[] =
+    streamData.type === 'mp4'
+      ? [
+          {
+            id: streamData.id || 'primary-file',
+            type: 'file',
+            qualities: {
+              unknown: { type: 'mp4', url: streamData.playlist },
+            },
+            flags: [flags.CORS_ALLOWED],
+            captions,
+            headers: streamData.headers || {},
+          },
+        ]
+      : [
+          {
+            id: streamData.id || 'primary-hls',
+            type: 'hls',
+            playlist: streamData.playlist,
+            flags: [flags.CORS_ALLOWED],
+            captions,
+            headers: streamData.headers || {},
+          },
+        ];
+
   return {
     embeds: [],
-    stream: [
-      {
-        id: streamData.id || 'primary-hls',
-        playlist: streamData.playlist,
-        type: streamData.type || 'hls',
-        flags: streamData.flags ? [flags.CORS_ALLOWED] : [flags.CORS_ALLOWED],
-        captions,
-        headers: streamData.headers || {},
-      },
-    ],
+    stream,
   };
 }
 
