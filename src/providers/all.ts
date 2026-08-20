@@ -74,7 +74,7 @@ import { animekaiScraper } from './sources/animekai';
 import { animetsuScraper } from './sources/animetsu';
 import { cinehdplusScraper } from './sources/cinehdplus-es';
 import { coitusScraper } from './sources/coitus';
-import { cuevana3Scraper } from './sources/cuevana3';
+import { peestream } from './sources/peestream';
 import { debridScraper } from './sources/debrid';
 import { embedsuScraper } from './sources/embedsu';
 import { FedAPIScraper } from './sources/fedapi';
@@ -108,7 +108,7 @@ export function gatherAllSources(): Array<Sourcerer> {
   return [
     fsOnlineScraper,
     dopeboxScraper,
-    cuevana3Scraper,
+    peestreamScraper,
     ridooMoviesScraper,
     hdRezkaScraper,
     warezcdnScraper,
