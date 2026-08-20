@@ -22,7 +22,7 @@ interface StreamPayload {
 
 async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
   const isMovie = ctx.media.type === 'movie';
-  
+
   // Construct URL parameters
   const queryParams = new URLSearchParams({
     type: ctx.media.type,
