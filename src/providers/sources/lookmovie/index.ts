@@ -22,7 +22,7 @@ async function universalScraper(ctx: MovieScrapeContext | ShowScrapeContext): Pr
         id: 'primary',
         playlist: video.playlist,
         type: 'hls',
-        flags: [flags.IP_LOCKED],
+        flags: [flags.CORS_ALLOWED],
         captions: video.captions,
       },
     ],
@@ -34,7 +34,7 @@ export const lookmovieScraper = makeSourcerer({
   name: 'LookMovie',
   disabled: false,
   rank: 171,
-  flags: [flags.IP_LOCKED],
+  flags: [flags.CORS_ALLOWED],
   scrapeShow: universalScraper,
   scrapeMovie: universalScraper,
 });

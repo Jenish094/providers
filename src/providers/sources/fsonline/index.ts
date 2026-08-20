@@ -133,6 +133,7 @@ export const fsOnlineEmbeds = [
     id: 'fsonline-doodstream',
     name: 'Doodstream',
     rank: 140,
+    disabled: true,
     scrape: scrapeDoodstreamEmbed,
     flags: [flags.CORS_ALLOWED],
   }),
