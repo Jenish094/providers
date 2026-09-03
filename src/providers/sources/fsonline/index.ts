@@ -124,6 +124,7 @@ export const fsOnlineScraper = makeSourcerer({
   name: 'FSOnline',
   rank: 140,
   flags: [flags.CORS_ALLOWED],
+  disabled: true,
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
 });
