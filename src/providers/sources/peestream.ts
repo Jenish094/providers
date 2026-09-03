@@ -1,11 +1,9 @@
 import { flags } from '@/entrypoint/utils/targets';
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
-import { Caption } from '@/providers/captions';
-import { Stream } from '@/providers/streams';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
 
-const providerUrl = 'https://providers.peestream.in/scrape';
+const baseUrl = 'https://providers.peestream.in';
 
 interface StreamPayload {
   type: 'hls' | 'mp4';
@@ -13,37 +11,52 @@ interface StreamPayload {
   id: string;
   flags?: string[];
   captions?: Array<{
-    id?: string;
+    id: string;
     language: string;
-    hasCors?: boolean;
-    hasCorsRestrictions?: boolean;
-    type?: string;
+    hasCors: boolean;
+    type: string;
     url: string;
   }>;
   headers?: Record<string, string>;
 }
 
-export async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
-  // Construct URL parameters
-  const queryParams = new URLSearchParams({
-    type: ctx.media.type,
-    title: ctx.media.title,
-    ...(ctx.media.tmdbId && { tmdbId: ctx.media.tmdbId.toString() }),
-    ...(ctx.media.imdbId && { imdbId: ctx.media.imdbId }),
-  });
+async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
+  const isMovie = ctx.media.type === 'movie';
 
-  if (ctx.media.type === 'movie') {
-    if (ctx.media.releaseYear) {
-      queryParams.set('releaseYear', ctx.media.releaseYear.toString());
-    }
+  // Choose endpoint path based on media type
+  const endpoint = isMovie ? `${baseUrl}/scrape` : `${baseUrl}/moovie-api/scrape`;
+
+  // Build query parameters dynamically based on media type
+  const queryParams = new URLSearchParams();
+
+  if (isMovie) {
+    queryParams.set('type', 'movie');
+    queryParams.set('title', ctx.media.title);
+    if (ctx.media.releaseYear) queryParams.set('releaseYear', ctx.media.releaseYear.toString());
+    if (ctx.media.imdbId) queryParams.set('imdbId', ctx.media.imdbId);
+    if (ctx.media.tmdbId) queryParams.set('tmdbId', ctx.media.tmdbId.toString());
   } else {
-    queryParams.set('season', ctx.media.season.number.toString());
-    queryParams.set('episode', ctx.media.episode.number.toString());
+    queryParams.set('type', 'tv');
+    queryParams.set('title', ctx.media.title);
+    if (ctx.media.releaseYear) queryParams.set('releaseYear', ctx.media.releaseYear.toString());
+    if (ctx.media.imdbId) queryParams.set('imdbId', ctx.media.imdbId);
+    if (ctx.media.tmdbId) queryParams.set('tmdbId', ctx.media.tmdbId.toString());
+
+    // TV Specific Parameters
+    queryParams.set('episodeNumber', ctx.media.episode.number.toString());
+    queryParams.set('seasonNumber', ctx.media.season.number.toString());
+
+    if (ctx.media.episode.tmdbId) {
+      queryParams.set('episodeTmdbId', ctx.media.episode.tmdbId.toString());
+    }
+    if (ctx.media.season.tmdbId) {
+      queryParams.set('seasonTmdbId', ctx.media.season.tmdbId.toString());
+    }
   }
 
-  const requestUrl = `${providerUrl}?${queryParams.toString()}`;
+  const requestUrl = `${endpoint}?${queryParams.toString()}`;
 
-  // Fetch SSE response body
+  // Execute GET request expecting Server-Sent Events
   const res = await ctx.proxiedFetcher.full(requestUrl, {
     method: 'GET',
     headers: {
@@ -54,7 +67,7 @@ export async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeConte
   const bodyText = res.body;
   let streamData: StreamPayload | null = null;
 
-  // Parse Server-Sent Events line by line
+  // Split SSE response blocks and parse event data
   const events = bodyText.split('\n\n');
   for (const block of events) {
     const lines = block.split('\n');
@@ -77,62 +90,43 @@ export async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeConte
           break;
         }
       } catch {
-        // Skip malformed JSON events
+        // Ignore unparseable frames
       }
     }
   }
 
   if (!streamData || !streamData.playlist) {
-    throw new NotFoundError('No stream data found from provider');
+    throw new NotFoundError('No stream available for this title');
   }
 
-  // Parse captions if present
-  const captions: Caption[] = (streamData.captions || []).map((caption) => {
-    const type = (caption.type ?? 'srt').toLowerCase();
-    return {
-      id: caption.id || caption.language,
-      language: caption.language,
-      type: type === 'vtt' ? 'vtt' : 'srt',
-      url: caption.url,
-      hasCorsRestrictions: caption.hasCorsRestrictions ?? caption.hasCors ?? true,
-    };
-  });
-
-  const stream: Stream[] =
-    streamData.type === 'mp4'
-      ? [
-          {
-            id: streamData.id || 'primary-file',
-            type: 'file',
-            qualities: {
-              unknown: { type: 'mp4', url: streamData.playlist },
-            },
-            flags: [flags.CORS_ALLOWED],
-            captions,
-            headers: streamData.headers || {},
-          },
-        ]
-      : [
-          {
-            id: streamData.id || 'primary-hls',
-            type: 'hls',
-            playlist: streamData.playlist,
-            flags: [flags.CORS_ALLOWED],
-            captions,
-            headers: streamData.headers || {},
-          },
-        ];
+  // Format captions if available
+  const captions = (streamData.captions || []).map((caption) => ({
+    id: caption.id || caption.language,
+    language: caption.language,
+    type: caption.type === 'vtt' ? 'vtt' : 'srt',
+    url: caption.url,
+    hasCors: caption.hasCors ?? true,
+  }));
 
   return {
     embeds: [],
-    stream,
+    stream: [
+      {
+        id: streamData.id || 'primary-hls',
+        playlist: streamData.playlist,
+        type: streamData.type || 'hls',
+        flags: [flags.CORS_ALLOWED],
+        captions,
+        headers: streamData.headers || {},
+      },
+    ],
   };
 }
 
 export const peestreamProvider = makeSourcerer({
   id: 'peestream',
-  name: 'PeeStream',
-  rank: 1,
+  name: 'PeeStream 🔥',
+  rank: 90,
   disabled: false,
   flags: [flags.CORS_ALLOWED],
   scrapeMovie: peestreamScraper,
