@@ -178,6 +178,7 @@ export const pelisplushdScraper = makeSourcerer({
   name: 'PelisPlusHD',
   rank: 75,
   flags: [flags.IP_LOCKED], // Vidhide embeds are IP locked
+  disabled: true,
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
 });

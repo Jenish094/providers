@@ -147,7 +147,7 @@ export const primesrcScraper = makeSourcerer({
   id: 'primesrc',
   name: 'PrimeSrc',
   rank: 168,
-  disabled: false,
+  disabled: true,
   flags: [],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,

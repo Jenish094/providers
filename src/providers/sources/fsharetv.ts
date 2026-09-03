@@ -92,5 +92,6 @@ export const fsharetvScraper = makeSourcerer({
   name: 'FshareTV',
   rank: 201,
   flags: [],
+  disabled: true,
   scrapeMovie: comboScraper,
 });

@@ -59,5 +59,6 @@ export const animekaiScraper = makeSourcerer({
   name: 'AnimeKai 🔥',
   rank: 180,
   flags: [],
+  disabled: true,
   scrapeShow: scrapeAnimekai,
 });

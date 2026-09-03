@@ -82,7 +82,7 @@ async function extractVideoUrl(ctx: any, streamingLink: string): Promise<string 
 export const doodScraper = makeEmbed({
   id: 'dood',
   name: 'dood',
-  disabled: false,
+  disabled: true,
   rank: 173,
   flags: [flags.CORS_ALLOWED],
   async scrape(ctx) {

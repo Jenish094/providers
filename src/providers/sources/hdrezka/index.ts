@@ -176,6 +176,7 @@ export const hdRezkaScraper = makeSourcerer({
   name: 'HDRezka',
   rank: 105,
   flags: [flags.CORS_ALLOWED, flags.IP_LOCKED],
+  disabled: true,
   scrapeShow: universalScraper,
   scrapeMovie: universalScraper,
 });

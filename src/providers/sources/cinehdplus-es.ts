@@ -101,7 +101,7 @@ export const cinehdplusScraper = makeSourcerer({
   id: 'cinehdplus',
   name: 'CineHDPlus (Latino)',
   rank: 4,
-  disabled: false,
+  disabled: true,
   flags: [],
   scrapeShow: comboScraper,
 });

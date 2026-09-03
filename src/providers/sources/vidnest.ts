@@ -147,7 +147,7 @@ export const vidnestProvider = makeSourcerer({
   id: 'vidnest',
   name: 'Vidnest',
   rank: 85,
-  disabled: false,
+  disabled: true,
   flags: [flags.CORS_ALLOWED],
   scrapeMovie: vidnestScraper,
   scrapeShow: vidnestScraper,

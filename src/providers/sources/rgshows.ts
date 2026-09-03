@@ -62,6 +62,7 @@ export const rgshowsScraper = makeSourcerer({
   name: '1Tube',
   rank: 176,
   flags: [],
+  disabled: true,
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
 });

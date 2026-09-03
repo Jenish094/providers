@@ -53,7 +53,7 @@ export function makeVidnestEmbed(id: string, rank: number = 100) {
     id: `vidnest-${id}`,
     name: `Vidnest ${id}`,
     rank,
-    disabled: false,
+    disabled: true,
     flags: [],
     async scrape(ctx) {
       const query = JSON.parse(ctx.url);
