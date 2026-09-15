@@ -8,7 +8,7 @@ features:
 - scrape popular streaming websites
 - works in both browser and server-side
 
-Visit documentation here: https://providers.pstream.jenish.tech
+Visit documentation here: https://providers.jstream.jenish.tech
 
 ## How to run locally or test my changes
 
