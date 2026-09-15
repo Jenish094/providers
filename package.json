@@ -1,6 +1,6 @@
 {
   "name": "@jenish094/providers",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Package that contains all the providers of j-stream",
   "type": "module",
   "main": "dist/index.js",
