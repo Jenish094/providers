@@ -13,7 +13,7 @@ interface AetherResponse {
   stream?: string;
 }
 
-export async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
+export async function aetherScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
   const tmdbId = ctx.media.tmdbId;
 
   if (!tmdbId) {
@@ -83,12 +83,12 @@ export async function peestreamScraper(ctx: ShowScrapeContext | MovieScrapeConte
   };
 }
 
-export const peestreamProvider = makeSourcerer({
-  id: 'peestream',
+export const aetherProvider = makeSourcerer({
+  id: 'aether',
   name: 'Thomas Shelby Sigma',
   rank: 95,
   disabled: false,
   flags: [flags.CORS_ALLOWED],
-  scrapeMovie: peestreamScraper,
-  scrapeShow: peestreamScraper,
+  scrapeMovie: aetherScraper,
+  scrapeShow: aetherScraper,
 });

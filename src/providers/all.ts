@@ -69,6 +69,7 @@ import { warezcdnembedMp4Scraper } from './embeds/warezcdn/mp4';
 import { warezPlayerScraper } from './embeds/warezcdn/warezplayer';
 import { zunimeEmbeds } from './embeds/zunime';
 import { EightStreamScraper } from './sources/8stream';
+import { aetherProvider } from './sources/aether';
 import { animeflvScraper } from './sources/animeflv';
 import { animekaiScraper } from './sources/animekai';
 import { animetsuScraper } from './sources/animetsu';
@@ -84,7 +85,6 @@ import { lookmovieScraper } from './sources/lookmovie';
 import { movies4fScraper } from './sources/movies4f';
 import { myanimeScraper } from './sources/myanime';
 import { nunflixScraper } from './sources/nunflix';
-import { peestreamProvider } from './sources/peestream';
 import { pelisplushdScraper } from './sources/pelisplushd';
 import { primewireScraper } from './sources/primewire';
 import { rgshowsScraper } from './sources/rgshows';
@@ -108,7 +108,7 @@ export function gatherAllSources(): Array<Sourcerer> {
   return [
     fsOnlineScraper,
     dopeboxScraper,
-    peestreamProvider,
+    aetherProvider,
     ridooMoviesScraper,
     hdRezkaScraper,
     warezcdnScraper,
