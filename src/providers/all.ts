@@ -73,6 +73,7 @@ import { aetherProvider } from './sources/aether';
 import { animeflvScraper } from './sources/animeflv';
 import { animekaiScraper } from './sources/animekai';
 import { animetsuScraper } from './sources/animetsu';
+import { cinecatScraper } from './sources/cinecat';
 import { cinehdplusScraper } from './sources/cinehdplus-es';
 import { coitusScraper } from './sources/coitus';
 import { debridScraper } from './sources/debrid';
@@ -147,6 +148,7 @@ export function gatherAllSources(): Array<Sourcerer> {
     movies4fScraper,
     debridScraper,
     cinehdplusScraper,
+    cinecatScraper,
     fullhdfilmizleScraper,
     vidlinkScraper,
     vidrockScraper,
