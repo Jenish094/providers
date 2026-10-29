@@ -59,7 +59,7 @@ async function universalScraper(ctx: MovieScrapeContext | ShowScrapeContext): Pr
         id: 'primary',
         type: 'hls',
         playlist: playlist.toString(),
-        flags: [flags.IP_LOCKED],
+        flags: [flags.CORS_ALLOWED],
         captions: [],
         headers: {
           Referer: 'https://cinecat.eu/',
@@ -74,7 +74,7 @@ export const cinecatScraper = makeSourcerer({
   id: 'cinecat',
   name: 'Sigma',
   rank: 320,
-  flags: [flags.IP_LOCKED],
+  flags: [flags.CORS_ALLOWED],
   scrapeMovie: universalScraper,
   scrapeShow: universalScraper,
 });
